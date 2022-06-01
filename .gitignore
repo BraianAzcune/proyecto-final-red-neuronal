@@ -1,3 +1,10 @@
+# Mi ignores
+# aca estan los datos de entramiento y test, no es necesario hacer copia de estos
+# ya que usamos datos descargados de Pytorch
+data/
+# no guardamos copia de los modelos entrenanados.
+*.pth
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
