@@ -1,0 +1,14 @@
+max acc test 0.623
+max acc train 0.87792
+
+min loss test 1.1118046584402679
+min loss train 0.12456287443637848
+
+La 13° epoca presenta el loss mas bajo en el conjunto de datos de test. 
+
+a partir de esta epoca el loss comienza a creecer, mientras que e loss del conjunto de datos de entrenamiento sigue bajando.
+Por lo que es una clara señal de overfitting, la red esta memorizando el conjunto de datos de entrenamiento.
+
+batch size = 64
+learning rate = 0.001
+weight_decay = 0 # no hay regularizacion habilitada...
