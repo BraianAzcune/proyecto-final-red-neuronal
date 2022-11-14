@@ -3,13 +3,21 @@ import torch
 from torch import nn
 from math import floor
 
-"""
-TODO hay que revisar entre Lenet5 y AlexNet, las diferencias entre ambas, y asi crear un rango de busqueda para los hiperparametros que definen la estructura interna de la red.
-"""
+
+def instanciarRed(config):
+    modelo = RedConvolucional(
+        cant_filtros_conv1=config["cant_filtros_conv1"], 
+        kernel_size_maxpool1=config["kernel_size_maxpool1"],
+        cant_filtros_conv2=config["cant_filtros_conv2"],
+        kernel_size_maxpool2=config["kernel_size_maxpool2"],
+        full_l1=config["full_l1"],
+        full_l2=config["full_l2"]
+        )
+    return modelo
 
 
 class RedConvolucional(nn.Module):
-    def __init__(self, cant_filtros_conv1=6, kernel_size_maxpool1=2, cant_filtros_conv2=16, kernel_size_maxpool2=2,full_l1=120,full_l2=84) -> None:
+    def __init__(self, cant_filtros_conv1=6, kernel_size_maxpool1=2, cant_filtros_conv2=16, kernel_size_maxpool2=2, full_l1=120, full_l2=84) -> None:
         super().__init__()
         # se reciben imagenes 3x32x32
         self.layer1 = nn.Sequential(
@@ -21,8 +29,9 @@ class RedConvolucional(nn.Module):
             nn.MaxPool2d(kernel_size=kernel_size_maxpool1, stride=2)
         )
 
-        o_conv2d = [cant_filtros_conv1, 32-5+1+2] # 30
-        o_maxPool = [cant_filtros_conv1, floor((o_conv2d[1] - kernel_size_maxpool1 + 2)/2)]
+        o_conv2d = [cant_filtros_conv1, 32-5+1+2]  # 30
+        o_maxPool = [cant_filtros_conv1, floor(
+            (o_conv2d[1] - kernel_size_maxpool1 + 2)/2)]
 
         self.layer2 = nn.Sequential(
             nn.Conv2d(in_channels=o_maxPool[0], out_channels=cant_filtros_conv2,
@@ -32,9 +41,10 @@ class RedConvolucional(nn.Module):
         )
 
         o_conv2d2 = [cant_filtros_conv2, o_maxPool[1] - 5 + 1]
-        o_maxPool2 = [cant_filtros_conv2, floor((o_conv2d2[1]-kernel_size_maxpool2+2)/2)]
+        o_maxPool2 = [cant_filtros_conv2, floor(
+            (o_conv2d2[1]-kernel_size_maxpool2+2)/2)]
 
-        cantidad_entradas = floor(o_maxPool2[0] * pow(o_maxPool2[1],2))
+        cantidad_entradas = floor(o_maxPool2[0] * pow(o_maxPool2[1], 2))
 
         self.denseLayer = nn.Sequential(
             nn.Flatten(),
