@@ -29,6 +29,6 @@ def cargar_dataloaders(dataset,batch_size=32):
     retorna el dataloader.
     """
     loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size,
-                                          shuffle=True, num_workers=2)
+                                          shuffle=True, num_workers=8)
     return loader
 
