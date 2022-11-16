@@ -55,7 +55,7 @@ class RedConvolucional(nn.Module):
             nn.Flatten(),
             nn.Linear(in_features=self.cantidad_entradas, out_features=full_l1),
             nn.ReLU(),
-            # nn.Dropout(0.1),
+            nn.Dropout(0.1),
             nn.Linear(in_features=full_l1, out_features=full_l2),
             nn.ReLU(),
             nn.Linear(in_features=full_l2, out_features=10)
