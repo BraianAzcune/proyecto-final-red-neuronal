@@ -25,13 +25,12 @@ class RedConvolucional(nn.Module):
         super().__init__()
         # se reciben imagenes 3x32x32
         self.layer1 = nn.Sequential(
-            # quedan un volumen de cant_filtros_conv1x30x30 # (n - k + s + p)/s
             nn.Conv2d(in_channels=3, out_channels=cant_filtros_conv1,
                       kernel_size=5, stride=1, padding=1),
             nn.ReLU(),
-            # queda un volumen de cant_filtros_conv1 x 15 x 15 (si kernel_size_maxpool1=2, si es 3, entonces= 14)
             nn.MaxPool2d(kernel_size=kernel_size_maxpool1, stride=2)
         )
+        # [cantidad filtros, dimension de tanto altura como anchura]
         self.o_conv2d = [cant_filtros_conv1, self.__calc_output_shape(32, 5, 1, 1)]
 
         self.o_maxPool = [cant_filtros_conv1, self.__calc_output_shape(
@@ -45,7 +44,7 @@ class RedConvolucional(nn.Module):
         )
 
         self.o_conv2d2 = [cant_filtros_conv2,
-                     self.__calc_output_shape(self.o_maxPool[1], 5, 1, 1)]
+                     self.__calc_output_shape(self.o_maxPool[1], 5, 0, 1)]
 
         
         self.o_maxPool2 = [cant_filtros_conv2, self.__calc_output_shape(self.o_conv2d2[1],kernel_size_maxpool2,0,2)]
