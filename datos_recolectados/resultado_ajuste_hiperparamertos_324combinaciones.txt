@@ -340,3 +340,25 @@ Number of errored trials: 1
 |-------------------------+--------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | train_cifar_40296_00189 |            1 | /home/braian/ray_results/train_cifar_2022-11-19_18-00-51/train_cifar_40296_00189_189_cant_filtros_conv1=6,cant_filtros_conv2=16,full_l1=120,full_l2=104,kernel_size_maxpool1=2,kernel_size__2022-11-19_20-29-35/error.txt |
 +-------------------------+--------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+QUE DICE ERROR FILE=
+Failure # 1 (occurred at 2022-11-19_20-29-53)
+[36mray::ImplicitFunc.train()[39m (pid=923879, ip=192.168.0.187, repr=func)
+  File "/home/braian/miniconda3/envs/tesis/lib/python3.9/site-packages/ray/tune/trainable/trainable.py", line 355, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/braian/miniconda3/envs/tesis/lib/python3.9/site-packages/ray/tune/trainable/function_trainable.py", line 325, in entrypoint
+    return self._trainable_func(
+  File "/home/braian/miniconda3/envs/tesis/lib/python3.9/site-packages/ray/tune/trainable/function_trainable.py", line 651, in _trainable_func
+    output = fn()
+  File "/tmp/ipykernel_17115/2035311563.py", line 135, in train_cifar
+  File "/home/braian/Documents/tesis-red-neuronal/cargar_datos.py", line 18, in cargar_datasets
+    trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
+  File "/home/braian/miniconda3/envs/tesis/lib/python3.9/site-packages/torchvision/datasets/cifar.py", line 65, in __init__
+    self.download()
+  File "/home/braian/miniconda3/envs/tesis/lib/python3.9/site-packages/torchvision/datasets/cifar.py", line 141, in download
+    download_and_extract_archive(self.url, self.root, filename=self.filename, md5=self.tgz_md5)
+  File "/home/braian/miniconda3/envs/tesis/lib/python3.9/site-packages/torchvision/datasets/utils.py", line 446, in download_and_extract_archive
+    download_url(url, download_root, filename, md5)
+  File "/home/braian/miniconda3/envs/tesis/lib/python3.9/site-packages/torchvision/datasets/utils.py", line 167, in download_url
+    raise RuntimeError("File not found or corrupted.")
+RuntimeError: File not found or corrupted.
