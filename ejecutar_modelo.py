@@ -42,7 +42,7 @@ def main(checkpoint_dir: str, path_datos_entrenamiento: str, num_epochs: int, pa
         # restaurar estado optimizador anterior
         optimizer.load_state_dict(optimizer_state)
 
-    trainset, _ = cargar_datasets(path_datos_entrenamiento)
+    trainset, testset = cargar_datasets(path_datos_entrenamiento)
     # reservar una parte de los datos de entrenamiento para validacion.
     train_subset, val_subset = partir_data_set(trainset, 0.2)
 
@@ -50,10 +50,12 @@ def main(checkpoint_dir: str, path_datos_entrenamiento: str, num_epochs: int, pa
     # batches de datos, ademas de mezclarlos.
     trainloader = cargar_dataloaders(train_subset, config["batch_size"])
     valloader = cargar_dataloaders(val_subset, config["batch_size"])
+    testloader = cargar_dataloaders(testset, config["batch_size"])
+
 
     # crear csv de estadistica
     path_archivo_csv = crear_archivo_estadisticas(
-        path_estadisticas, ["epoch", "lossTrain", "lossVal", "accuracyTrain", "accuracyVal"])
+        path_estadisticas, ["epoch", "lossTrain", "lossVal", "accuracyTrain", "accuracyVal","accuracyTest"])
 
     # loop entrenar validar, guardar copia y estadistica.
     for epoch in range(last_epoch+1, last_epoch+num_epochs+1):
@@ -61,24 +63,21 @@ def main(checkpoint_dir: str, path_datos_entrenamiento: str, num_epochs: int, pa
             model, device, trainloader, criterion, optimizer)
         lossVal, accuracyVal = validation_loss(
             model, device, valloader, criterion)
+        accuracyTest = test_accuracy(model,device,testloader)
 
         print("epoch", epoch)
         print("lossTrain", "accuracyTrain")
         print(lossTrain, accuracyTrain)
         print("lossVal", "accuracyVal")
         print(lossVal, accuracyVal)
-
+        print("accuracyTest",accuracyTest)
+        
         guardar_estadisticas(path_archivo_csv, [epoch,
-                             lossTrain, lossVal, accuracyTrain, accuracyVal])
+                             lossTrain, lossVal, accuracyTrain, accuracyVal,accuracyTest])
         # guardar modelo cada 10 epocas.
         if epoch % 10 == 9:
             guardar_estado_modelo(checkpoint_dir, epoch, model, optimizer)
 
-    # test final del modelo
-    test_acc = test_accuracy(
-        model, device, path_datos_entrenamiento, config["batch_size"])
-    print("Porcentaje de acierto en el conjunto de datos test: {:.2f}".format(
-        test_acc * 100))
 
 
 def guardar_estado_modelo(checkpoint_dir, epoch, model, optimizer):
@@ -151,10 +150,7 @@ def validation_loss(model, device, valloader, criterion):
     return loss, accuracy
 
 
-def test_accuracy(model, device, data_dir, batch_size):
-    _, testset = cargar_datasets(data_dir)
-    testloader = cargar_dataloaders(testset, batch_size)
-
+def test_accuracy(model, device, testloader):
     correct = 0
     total = 0
     # pone a la red en moodo evaluacion, desactiva capas dropout.
@@ -227,14 +223,17 @@ if __name__ == "__main__":
     path_estadisticas = os.path.abspath("./datos_estadistica/")
     path_datos_entrenamiento = os.path.abspath("./data")
 
-    ultimo_checkpoint = "49"
-    checkpoint_state = os.path.join(checkpoint_dir, "modelo_checkpoint"+ultimo_checkpoint)
+    ultimo_checkpoint = "0"
+    model_state = None
+    optimizer_state = None
 
-    model_state, optimizer_state = cargar_estado_modelo_optimizador(
-        checkpoint_state)
+    # ultimo_checkpoint = "49"
+    # checkpoint_state = os.path.join(checkpoint_dir, "modelo_checkpoint"+ultimo_checkpoint)
+    # model_state, optimizer_state = cargar_estado_modelo_optimizador(
+    #     checkpoint_state)
 
     main(checkpoint_dir=checkpoint_dir,
-         num_epochs=10,
+         num_epochs=1,
          path_datos_entrenamiento=path_datos_entrenamiento,
          path_estadisticas=path_estadisticas,
          model_state=model_state,
