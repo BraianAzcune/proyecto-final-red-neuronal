@@ -2,7 +2,7 @@ from torch import nn
 from math import floor
 
 
-def instanciarRed(config):
+def instanciarModeloConvolucional(config):
     modelo = RedConvolucional(
         cant_filtros_conv1=config["cant_filtros_conv1"],
         kernel_size_maxpool1=config["kernel_size_maxpool1"],

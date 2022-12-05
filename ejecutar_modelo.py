@@ -2,7 +2,8 @@ import os
 import csv
 from typing import List
 from datetime import datetime
-from modelo_convolucional import instanciarRed
+from modelo_convolucional import instanciarModeloConvolucional
+from modelo_mlp import instanciarModeloMLP
 from cargar_datos import cargar_datasets, cargar_dataloaders
 # import pytorch
 import torch
@@ -10,19 +11,8 @@ from torch import nn
 from torch.utils.data import random_split
 
 
-def main(checkpoint_dir: str, path_datos_entrenamiento: str, num_epochs: int, path_estadisticas: str, model_state=None, optimizer_state=None, last_epoch=0):
-    config = {
-        "batch_size": 16,
-        "learning_rate": 0.000106647,
-        "cant_filtros_conv1": 18,
-        "kernel_size_maxpool1": 2,
-        "cant_filtros_conv2": 28,
-        "kernel_size_maxpool2": 3,
-        "full_l1": 160,
-        "full_l2": 104,
-    }
-    # instanciar modelo convolucional
-    model = instanciarRed(config)
+def main(model, config, checkpoint_dir: str, path_datos_entrenamiento: str, num_epochs: int, path_estadisticas: str, model_state=None, optimizer_state=None, last_epoch=0):
+
     if model_state is not None:
         # restaurar estado modelo anterior
         model.load_state_dict(model_state)
@@ -52,10 +42,9 @@ def main(checkpoint_dir: str, path_datos_entrenamiento: str, num_epochs: int, pa
     valloader = cargar_dataloaders(val_subset, config["batch_size"])
     testloader = cargar_dataloaders(testset, config["batch_size"])
 
-
     # crear csv de estadistica
     path_archivo_csv = crear_archivo_estadisticas(
-        path_estadisticas, ["epoch", "lossTrain", "lossVal", "accuracyTrain", "accuracyVal","accuracyTest"])
+        path_estadisticas, ["epoch", "lossTrain", "lossVal", "accuracyTrain", "accuracyVal", "accuracyTest"])
 
     # loop entrenar validar, guardar copia y estadistica.
     for epoch in range(last_epoch+1, last_epoch+num_epochs+1):
@@ -63,21 +52,20 @@ def main(checkpoint_dir: str, path_datos_entrenamiento: str, num_epochs: int, pa
             model, device, trainloader, criterion, optimizer)
         lossVal, accuracyVal = validation_loss(
             model, device, valloader, criterion)
-        accuracyTest = test_accuracy(model,device,testloader)
+        accuracyTest = test_accuracy(model, device, testloader)
 
         print("epoch", epoch)
         print("lossTrain", "accuracyTrain")
         print(lossTrain, accuracyTrain)
         print("lossVal", "accuracyVal")
         print(lossVal, accuracyVal)
-        print("accuracyTest",accuracyTest)
-        
+        print("accuracyTest", accuracyTest)
+
         guardar_estadisticas(path_archivo_csv, [epoch,
-                             lossTrain, lossVal, accuracyTrain, accuracyVal,accuracyTest])
+                             lossTrain, lossVal, accuracyTrain, accuracyVal, accuracyTest])
         # guardar modelo cada 10 epocas.
         if epoch % 10 == 9:
             guardar_estado_modelo(checkpoint_dir, epoch, model, optimizer)
-
 
 
 def guardar_estado_modelo(checkpoint_dir, epoch, model, optimizer):
@@ -223,16 +211,34 @@ if __name__ == "__main__":
     path_estadisticas = os.path.abspath("./datos_estadistica/")
     path_datos_entrenamiento = os.path.abspath("./data")
 
-    ultimo_checkpoint = "99"
+    ultimo_checkpoint = "0"
     model_state = None
     optimizer_state = None
 
-    checkpoint_state = os.path.join(checkpoint_dir, "modelo_checkpoint"+ultimo_checkpoint)
-    model_state, optimizer_state = cargar_estado_modelo_optimizador(
-        checkpoint_state)
+    # checkpoint_state = os.path.join(
+    #     checkpoint_dir, "modelo_checkpoint"+ultimo_checkpoint)
+    # model_state, optimizer_state = cargar_estado_modelo_optimizador(
+    #     checkpoint_state)
 
-    main(checkpoint_dir=checkpoint_dir,
-         num_epochs=100,
+    # Configuracion del modelo y instanciarlo
+    config = {
+        "batch_size": 16,
+        "learning_rate": 0.000106647,
+        "cant_filtros_conv1": 18,
+        "kernel_size_maxpool1": 2,
+        "cant_filtros_conv2": 28,
+        "kernel_size_maxpool2": 3,
+        "full_l1": 160,
+        "full_l2": 104,
+    }
+    # instanciar modelo convolucional
+    #modelo = instanciarModeloConvolucional(config)
+    modelo = instanciarModeloMLP(config)
+
+    main(model=modelo,
+         config=config,
+         checkpoint_dir=checkpoint_dir,
+         num_epochs=200,
          path_datos_entrenamiento=path_datos_entrenamiento,
          path_estadisticas=path_estadisticas,
          model_state=model_state,
