@@ -223,17 +223,16 @@ if __name__ == "__main__":
     path_estadisticas = os.path.abspath("./datos_estadistica/")
     path_datos_entrenamiento = os.path.abspath("./data")
 
-    ultimo_checkpoint = "0"
+    ultimo_checkpoint = "99"
     model_state = None
     optimizer_state = None
 
-    # ultimo_checkpoint = "49"
-    # checkpoint_state = os.path.join(checkpoint_dir, "modelo_checkpoint"+ultimo_checkpoint)
-    # model_state, optimizer_state = cargar_estado_modelo_optimizador(
-    #     checkpoint_state)
+    checkpoint_state = os.path.join(checkpoint_dir, "modelo_checkpoint"+ultimo_checkpoint)
+    model_state, optimizer_state = cargar_estado_modelo_optimizador(
+        checkpoint_state)
 
     main(checkpoint_dir=checkpoint_dir,
-         num_epochs=1,
+         num_epochs=100,
          path_datos_entrenamiento=path_datos_entrenamiento,
          path_estadisticas=path_estadisticas,
          model_state=model_state,
