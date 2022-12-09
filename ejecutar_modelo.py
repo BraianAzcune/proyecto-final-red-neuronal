@@ -232,8 +232,8 @@ if __name__ == "__main__":
         "full_l2": 104,
     }
     # instanciar modelo convolucional
-    #modelo = instanciarModeloConvolucional(config)
-    modelo = instanciarModeloMLP(config)
+    modelo = instanciarModeloConvolucional(config)
+    #modelo = instanciarModeloMLP(config)
 
     main(model=modelo,
          config=config,

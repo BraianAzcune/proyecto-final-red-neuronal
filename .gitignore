@@ -2,6 +2,7 @@
 # aca estan los datos de entramiento y test, no es necesario hacer copia de estos
 # ya que usamos datos descargados de Pytorch
 data/
+checkpoint_dir/
 # no guardamos copia de los modelos entrenanados.
 *.pth
 
