@@ -26,7 +26,7 @@ def main(model, config, checkpoint_dir: str, path_datos_entrenamiento: str, num_
 
     # se necesita enviar los parametros del modelo al optimizador para que los pueda actualizar.
     optimizer = torch.optim.Adam(
-        model.parameters(), lr=config["learning_rate"])
+        model.parameters(), lr=config["learning_rate"], weight_decay=config["weight_decay"])
 
     if optimizer_state is not None:
         # restaurar estado optimizador anterior
@@ -230,10 +230,11 @@ if __name__ == "__main__":
         "kernel_size_maxpool2": 3,
         "full_l1": 160,
         "full_l2": 104,
+        "weight_decay":1e-4,
     }
     # instanciar modelo convolucional
-    modelo = instanciarModeloConvolucional(config)
-    #modelo = instanciarModeloMLP(config)
+    #modelo = instanciarModeloConvolucional(config)
+    modelo = instanciarModeloMLP(config)
 
     main(model=modelo,
          config=config,
