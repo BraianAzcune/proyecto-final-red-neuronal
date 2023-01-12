@@ -1,0 +1,16 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Proyecto final Estudio y comparación de diferentes
+  redes neuronales usadas para la clasificación de
+  imágenes
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Braian Sebastian
+    family-names: Azcune
+    email: sebastian.azcune@gmail.com
