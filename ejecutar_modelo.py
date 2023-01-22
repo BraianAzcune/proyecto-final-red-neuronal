@@ -64,14 +64,15 @@ def main(model, config, checkpoint_dir: str, path_datos_entrenamiento: str, num_
         guardar_estadisticas(path_archivo_csv, [epoch,
                              lossTrain, lossVal, accuracyTrain, accuracyVal, accuracyTest])
         # guardar modelo cada 10 epocas.
-        if epoch % 10 == 9:
-            guardar_estado_modelo(checkpoint_dir, epoch, model, optimizer)
+        # if epoch % 10 == 9:
+        #     guardar_estado_modelo(checkpoint_dir, epoch, model, optimizer)
+    guardar_estado_modelo(checkpoint_dir, epoch, model, optimizer)
 
 
 def guardar_estado_modelo(checkpoint_dir, epoch, model, optimizer):
-    name = checkpoint_dir + "/modelo_checkpoint"+str(epoch)
+    name = checkpoint_dir + "/modelo_checkpoint"+str(epoch)+".pt"
     with open(name, "w") as f:
-        torch.save((model.state_dict(), optimizer.state_dict()), name)
+        torch.save(model.state_dict(), name)
 
 
 def train_loop(model, device, trainloader, criterion, optimizer):
@@ -233,8 +234,8 @@ if __name__ == "__main__":
         "weight_decay":1e-4,
     }
     # instanciar modelo convolucional
-    #modelo = instanciarModeloConvolucional(config)
-    modelo = instanciarModeloMLP(config)
+    modelo = instanciarModeloConvolucional(config)
+    # modelo = instanciarModeloMLP(config)
 
     main(model=modelo,
          config=config,
