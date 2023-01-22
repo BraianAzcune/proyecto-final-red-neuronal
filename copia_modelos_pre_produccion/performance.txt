@@ -1,0 +1,11 @@
+Ambos fueron entrenados 200 epocas
+
+MODELO CONVOLUCIONAL
+accuracyTrain=0.964175
+accuracyVal=0.6681
+accuracyTest=0.6721
+
+MODELO MLP
+accuracyTrain=0.684675
+accuracyVal=0.519
+accuracyTest=0.5109
